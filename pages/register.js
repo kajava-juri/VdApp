@@ -4,14 +4,12 @@ import fetchJson, { FetchError } from "../lib/fetchJson";
 import React, { useState } from "react";
 import useUser from "../lib/useUser";
 
-export default function Login(){
+export default function Register(){
   // here we just check if user is already logged in and redirect to profile
   const { mutateUser } = useUser({
-    redirectTo: "/profile",
+    redirectTo: "/profile-sg",
     redirectIfFound: true,
   });
-
-  const [errorMsg, setErrorMsg] = useState("");
 
     return(
         <Layout>
@@ -25,9 +23,11 @@ export default function Login(){
                             password: event.currentTarget.password.value,
                         }
 
+                        console.log(JSON.stringify(body));
+
                         try{
                             mutateUser(
-                                await fetchJson("/api/login", {
+                                await fetchJson("/api/register", {
                                     method:"POST",
                                     headers: { "Content-Type": "application/json" },
                                     body: JSON.stringify(body),

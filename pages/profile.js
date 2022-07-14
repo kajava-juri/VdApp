@@ -10,7 +10,8 @@ export default function Profile(){
 
       return(
         <Layout>
-            This is your Profile.
+            {user?.isLoggedIn ? "true" : "false"}
+            {user?.login}
         </Layout>
       )
 

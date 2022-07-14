@@ -2,6 +2,7 @@ import Link from "next/link";
 import useUser from "../lib/useUser";
 import { useRouter } from "next/router";
 import Image from "next/image";
+import fetchJson from "../lib/fetchJson";
 
 export default function Header() {
   const { user, mutateUser } = useUser();
@@ -16,32 +17,50 @@ export default function Header() {
               <a>Home</a>
             </Link>
           </li>
+          {user?.isLoggedIn === false && (
+            <li>
+              <Link href="/login">
+                <a>Login</a>
+              </Link>
+            </li>
+          )}
+          {user?.isLoggedIn === true && (
             <>
-            {user?.isLoggedIn === true && (
               <li>
-              {/* In this case, we're fine with linking with a regular a in case of no JavaScript */}
-              {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-              <a
-                href="#"
-              >
-                Logout
-              </a>
-            </li>
-            )}
-
-            {user?.isLoggedIn === false && (
+                <Link href="/profile">
+                  <a>
+                    <span
+                      style={{
+                        marginRight: ".3em",
+                        verticalAlign: "middle",
+                        borderRadius: "100%",
+                        overflow: "hidden",
+                      }}
+                    >
+                    </span>
+                    Profile
+                  </a>
+                </Link>
+              </li>
               <li>
-              {/* In this case, we're fine with linking with a regular a in case of no JavaScript */}
-              {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-              <a
-                href="#"
-              >
-                Login
-              </a>
-            </li>
-            )}
-
+                {/* In this case, we're fine with linking with a regular a in case of no JavaScript */}
+                {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+                <a
+                  href="/api/logout"
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    mutateUser(
+                      await fetchJson("/api/logout", { method: "POST" }),
+                      false,
+                    );
+                    router.push("/login");
+                  }}
+                >
+                  Logout
+                </a>
+              </li>
             </>
+          )}
         </ul>
       </nav>
       <style jsx>{`
