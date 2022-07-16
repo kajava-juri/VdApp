@@ -36,7 +36,7 @@ export default async function handler(req, res) {
             res.send(JSON.stringify({"status": 500, "error": 'In create user '+e, "response": null}));
         }
     }
-    
+
     catch(e)
     {
     res.send(JSON.stringify({"status": 500, "error": 'In user '+e, "response": null}));

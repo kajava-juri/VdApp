@@ -17,14 +17,7 @@ export default function Header() {
               <a>Home</a>
             </Link>
           </li>
-          {user?.isLoggedIn === false && (
-            <li>
-              <Link href="/login">
-                <a>Login</a>
-              </Link>
-            </li>
-          )}
-          {user?.isLoggedIn === true && (
+          {user?.isLoggedIn && (
             <>
               <li>
                 <Link href="/profile">

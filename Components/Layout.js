@@ -26,22 +26,14 @@ export default function Layout({ children }) {
           align-items: center;
         }
 
-        footer {
-          width: 100%;
-          height: 100px;
-          border-top: 1px solid #eaeaea;
+        fotter {
           display: flex;
-          justify-content: center;
+          place-content: center;
+          height: 50px;
           align-items: center;
-          position:absolute;
-          bottom:0;
         }
 
-        footer img {
-          margin-left: 0.5rem;
-        }
-
-        footer a {
+        a {
           display: flex;
           justify-content: center;
           align-items: center;

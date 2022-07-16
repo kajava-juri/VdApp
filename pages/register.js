@@ -2,7 +2,11 @@ import Layout from "../Components/Layout";
 import { LoginForm } from "../Components/LoginForm";
 import fetchJson, { FetchError } from "../lib/fetchJson";
 import React, { useState } from "react";
+import { PrismaClient } from '@prisma/client';
 import useUser from "../lib/useUser";
+const bcrypt = require('bcrypt');
+const prisma = new PrismaClient();
+
 
 export default function Register(){
   // here we just check if user is already logged in and redirect to profile
@@ -11,8 +15,27 @@ export default function Register(){
     redirectIfFound: true,
   });
 
-    return(
+
+
+  const [psw, setpsw] = useState();
+
+  async function validate(event){
+    event.preventDefault();
+    //const contents = readFileSync("./importantPassword", 'utf-8');
+    //console.log(contents)
+
+    //const valid = await bcrypt.compare(req.body.password, userData.Password);
+
+  }
+
+
+  return(
         <Layout>
+            {psw && (
+                <form onSubmit={validate}>
+                    <input type="submit">SUBMIT</input>
+                </form>
+            )}
             <div>
                 <LoginForm errorMessage={""} 
                 onSubmit={ async function handleSubmit(event){
