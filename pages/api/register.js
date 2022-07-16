@@ -14,7 +14,7 @@ export default async function handler(req, res) {
 
         if(user)
         {
-            res.send(JSON.stringify({"status": 302, "error": 'User is found with that username'}));
+            res.status(302).json({ message: "User is found with that username" });
             return;
         }
 

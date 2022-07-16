@@ -4,69 +4,97 @@ import fetchJson, { FetchError } from "../lib/fetchJson";
 import React, { useState } from "react";
 import { PrismaClient } from '@prisma/client';
 import useUser from "../lib/useUser";
-const bcrypt = require('bcrypt');
-const prisma = new PrismaClient();
+import Modal from "../Components/Modal";
+
+//const prisma = new PrismaClient();
 
 
 export default function Register(){
   // here we just check if user is already logged in and redirect to profile
-  const { mutateUser } = useUser({
+  const { mutateUser, user } = useUser({
     redirectTo: "/profile-sg",
     redirectIfFound: true,
   });
 
+  const [errorMsg, setErrorMsg] = useState("");
+  const [isAuthorised, setAuthorised] = useState(false);
 
+  async function Compare(e){
+    e.preventDefault();
 
-  const [psw, setpsw] = useState();
+    const body = {
+        password: e.currentTarget.password.value,
+    }
 
-  async function validate(event){
-    event.preventDefault();
-    //const contents = readFileSync("./importantPassword", 'utf-8');
-    //console.log(contents)
+    try{
+        const valid = await fetchJson("/api/validate", {
+            method:"POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body),
+        })
+        
+        setAuthorised(valid);
 
-    //const valid = await bcrypt.compare(req.body.password, userData.Password);
-
+    } catch(error){
+        if (error instanceof FetchError) {
+            setErrorMsg(error.data.message);
+            console.log(error.data.message);
+          } else {
+            console.error("An unexpected error happened:", error);
+          }
+    }
+    
   }
 
 
   return(
         <Layout>
-            {psw && (
-                <form onSubmit={validate}>
-                    <input type="submit">SUBMIT</input>
-                </form>
+            {isAuthorised && (
+                <div>
+                    <LoginForm errorMessage={""} 
+                    onSubmit={ async function handleSubmit(event){
+                            event.preventDefault();
+
+                            const body = {
+                                username: event.currentTarget.username.value,
+                                password: event.currentTarget.password.value,
+                            }
+
+                            console.log(JSON.stringify(body));
+
+                            try{
+                                mutateUser(
+                                    await fetchJson("/api/register", {
+                                        method:"POST",
+                                        headers: { "Content-Type": "application/json" },
+                                        body: JSON.stringify(body),
+                                    }),
+                                    false,
+                                );
+                            } catch(error){
+                                if (error instanceof FetchError) {
+                                    setErrorMsg(error.data.message);
+                                } else {
+                                    console.error("An unexpected error happened:", error);
+                                }
+                            }
+                        }}
+                    />
+                </div>
             )}
-            <div>
-                <LoginForm errorMessage={""} 
-                onSubmit={ async function handleSubmit(event){
-                        event.preventDefault();
+            <Modal open={!isAuthorised}>
+                <form onSubmit={Compare}>
 
-                        const body = {
-                            username: event.currentTarget.username.value,
-                            password: event.currentTarget.password.value,
-                        }
+                    <label htmlFor="password">Password: </label>
+                    <input type="password" name="password"/>
 
-                        console.log(JSON.stringify(body));
+                    <input type="submit" value="Submit"></input>
+                    
+                </form>
 
-                        try{
-                            mutateUser(
-                                await fetchJson("/api/register", {
-                                    method:"POST",
-                                    headers: { "Content-Type": "application/json" },
-                                    body: JSON.stringify(body),
-                                }),
-                                false,
-                            );
-                        } catch(error){
-                            if (error instanceof FetchError) {
-                                setErrorMsg(error.data.message);
-                              } else {
-                                console.error("An unexpected error happened:", error);
-                              }
-                        }
-                    }}
-                />
-            </div>
+            </Modal>
+
         </Layout>
     )
 }
+

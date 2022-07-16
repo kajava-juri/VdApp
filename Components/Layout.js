@@ -130,6 +130,8 @@ export default function Layout({ children }) {
             flex-direction: column;
           }
         }
+
+        
       `}</style>
       
       <style jsx global>{`
@@ -164,10 +166,6 @@ export default function Layout({ children }) {
       <main>
         <div className="container">{children}</div>
       </main>
-
-      <footer>
-        Footer
-      </footer>
     </>
   );
 }

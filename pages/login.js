@@ -44,6 +44,7 @@ export default function Login(){
                     }}
                 />
             </div>
+            <h2>{errorMsg}</h2>
         </Layout>
     )
 }
