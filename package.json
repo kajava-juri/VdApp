@@ -1,12 +1,9 @@
 {
   "private": true,
   "scripts": {
+    "build": "next build",
     "dev": "next dev",
-    "build": "webpack --mode=production --node-env=production",
-    "start": "next start",
-    "build:dev": "webpack --mode=development",
-    "build:prod": "webpack --mode=production --node-env=production",
-    "watch": "webpack --watch"
+    "start": "next start"
   },
   "dependencies": {
     "@prisma/client": "^4.0.0",
@@ -28,7 +25,6 @@
     "@babel/preset-env": "^7.17.10",
     "babel-loader": "^8.2.5",
     "prisma": "^4.0.0",
-    "webpack": "^5.73.0",
     "webpack-cli": "^4.10.0"
   },
   "browser": {

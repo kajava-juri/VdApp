@@ -51,7 +51,7 @@ export default function Register(){
         <Layout>
             {isAuthorised && (
                 <div>
-                    <LoginForm errorMessage={""} 
+                    <LoginForm errorMessage={""} text="Register"
                     onSubmit={ async function handleSubmit(event){
                             event.preventDefault();
 
@@ -63,14 +63,11 @@ export default function Register(){
                             console.log(JSON.stringify(body));
 
                             try{
-                                mutateUser(
-                                    await fetchJson("/api/register", {
-                                        method:"POST",
-                                        headers: { "Content-Type": "application/json" },
-                                        body: JSON.stringify(body),
-                                    }),
-                                    false,
-                                );
+                                await fetchJson("/api/register", {
+                                    method:"POST",
+                                    headers: { "Content-Type": "application/json" },
+                                    body: JSON.stringify(body),
+                                })
                             } catch(error){
                                 if (error instanceof FetchError) {
                                     setErrorMsg(error.data.message);
@@ -80,6 +77,7 @@ export default function Register(){
                             }
                         }}
                     />
+                    <h2 style={{color:"red"}}>{errorMsg}</h2>
                 </div>
             )}
             <Modal open={!isAuthorised}>

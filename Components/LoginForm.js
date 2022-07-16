@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 
-export function LoginForm({errorMessage, onSubmit}){
+export function LoginForm({errorMessage, text, onSubmit}){
 
     const initialValues = {
         username: "", 
@@ -61,7 +61,7 @@ export function LoginForm({errorMessage, onSubmit}){
                     background-color: #45a049;
                 }
             `}</style>
-            <h2>Log in as admin</h2>
+            <h2>{text}</h2>
             <form onSubmit={onSubmit}>
 
                 <label htmlFor="username">Login: </label>

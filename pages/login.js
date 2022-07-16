@@ -16,7 +16,7 @@ export default function Login(){
     return(
         <Layout>
             <div>
-                <LoginForm errorMessage={""} 
+                <LoginForm errorMessage={""} text="Log in as admin"
                 onSubmit={ async function handleSubmit(event){
                         event.preventDefault();
 
@@ -44,7 +44,7 @@ export default function Login(){
                     }}
                 />
             </div>
-            <h2>{errorMsg}</h2>
+            <h2 style={{color:"red"}}>{errorMsg}</h2>
         </Layout>
     )
 }
