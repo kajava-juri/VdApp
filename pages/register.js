@@ -12,7 +12,7 @@ import Modal from "../Components/Modal";
 export default function Register(){
   // here we just check if user is already logged in and redirect to profile
   const { mutateUser, user } = useUser({
-    redirectTo: "/profile-sg",
+    redirectTo: "/profile",
     redirectIfFound: true,
   });
 
@@ -46,7 +46,7 @@ export default function Register(){
     
   }
 
-
+  console.log(isAuthorised);
   return(
         <Layout>
             {isAuthorised && (
