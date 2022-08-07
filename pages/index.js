@@ -41,6 +41,7 @@ export default function Home({files}) {
                   return (
                     <div className="col-md-3" style={{margin: "10px", padding: "15px", minHeight: "410px", border: "1px solid rgba(0,0,0,.125)", borderRadius: "0.25rem", width:"290px"}}>
                       <img height="210" width="100%" className="myVid" src={`videos/${file}`}></img>
+                      <p>{file}</p>
                     </div>
                     
                   )
@@ -51,6 +52,7 @@ export default function Home({files}) {
                       <video height="210" width="100%" className="myVid" onClick={() => handleFullscreen(file)}>
                         <source src={`videos/${file}`}></source>
                       </video>
+                      <p>{file}</p>
                     </div>
                   )
                 }
