@@ -48,7 +48,7 @@ export default function Home({files}) {
                 else{
                   return (
                     <div className="col-md-3" style={{margin: "10px", padding: "15px", minHeight: '410px', border: "1px solid rgba(0,0,0,.125)", borderRadius: "0.25rem", width:"290px"}}>
-                      <video height="210" width="100%" className="myVid" onClick={() => handleFullscreen(file)} controls>
+                      <video height="210" width="100%" className="myVid" onClick={() => handleFullscreen(file)}>
                         <source src={`videos/${file}`}></source>
                       </video>
                     </div>
