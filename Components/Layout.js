@@ -22,7 +22,16 @@ export default function Layout({ children }) {
           box-sizing: border-box;
         }
 
-        
+        .myVid{
+          border-radius: 5px;
+          cursor: pointer;
+          transition: 0.3s;
+          width: 100%;
+      }
+      
+      .myVid:hover {
+          opacity: 0.7;
+      }
 
         html,
         body {
@@ -32,6 +41,9 @@ export default function Layout({ children }) {
             Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
             sans-serif;
           background-color: #282c34;
+        }
+        h1, p {
+          color: #fff;
         }
 
         * {

@@ -13,14 +13,14 @@ export default function Header() {
       
       <nav>
         <ul>
-          <li>
+          <li key={"home"}>
             <Link href="/">
               <a>Home</a>
             </Link>
           </li>
           {user?.isLoggedIn && (
             <>
-              <li>
+              <li key={"profile"}>
                 <Link href="/profile">
                   <a>
                     <span
@@ -36,7 +36,7 @@ export default function Header() {
                   </a>
                 </Link>
               </li>
-              <li>
+              <li key={"logout"}>
                 {/* In this case, we're fine with linking with a regular a in case of no JavaScript */}
                 {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
                 <a
@@ -68,6 +68,7 @@ export default function Header() {
         li {
           margin-right: 3rem;
           display: flex;
+          margin-top: 10px;
         }
 
         li:first-child {

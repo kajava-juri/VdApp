@@ -19,6 +19,7 @@ export default function Home({files}) {
   function handleFullscreen(video){
     setVdSource(video);
     setModalOpen(true);
+    console.log(modalOpen);
 
   }
 
@@ -34,11 +35,11 @@ export default function Home({files}) {
       {files && (
         <div>
           <div className="container">
-            <div class="row" style={{justifyContent: "center"}}>
+            <div className="row" style={{justifyContent: "center"}}>
               {files.map((file) => {
                 if(path.extname(file) == ".gif"){
                   return (
-                    <div class="col-md-3" style={{margin: "10px", padding: "15px", minHeight: "410px", border: "1px solid rgba(0,0,0,.125)", borderRadius: "0.25rem", width:"290px"}}>
+                    <div className="col-md-3" style={{margin: "10px", padding: "15px", minHeight: "410px", border: "1px solid rgba(0,0,0,.125)", borderRadius: "0.25rem", width:"290px"}}>
                       <img height="210" width="100%" className="myVid" src={`videos/${file}`}></img>
                     </div>
                     
@@ -46,8 +47,8 @@ export default function Home({files}) {
                 }
                 else{
                   return (
-                    <div class="col-md-3" style={{margin: "10px", padding: "15px", minHeight: '410px', border: "1px solid rgba(0,0,0,.125)", borderRadius: "0.25rem", width:"290px"}}>
-                      <video height="210" width="100%" className="myVid" onClick={() => handleFullscreen(file)}>
+                    <div className="col-md-3" style={{margin: "10px", padding: "15px", minHeight: '410px', border: "1px solid rgba(0,0,0,.125)", borderRadius: "0.25rem", width:"290px"}}>
+                      <video height="210" width="100%" className="myVid" onClick={() => handleFullscreen(file)} controls>
                         <source src={`videos/${file}`}></source>
                       </video>
                     </div>

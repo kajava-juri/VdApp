@@ -2,7 +2,6 @@ import Layout from "../Components/Layout";
 import { LoginForm } from "../Components/LoginForm";
 import fetchJson, { FetchError } from "../lib/fetchJson";
 import React, { useState } from "react";
-import { PrismaClient } from '@prisma/client';
 import useUser from "../lib/useUser";
 import Modal from "../Components/Modal";
 

@@ -1,6 +1,5 @@
 import { SWRConfig } from "swr";
 import fetchJson from "../lib/fetchJson";
-import "../css/videos.css";
 function MyApp({ Component, pageProps }) {
   return (
     <SWRConfig

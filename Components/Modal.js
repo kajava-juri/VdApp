@@ -5,7 +5,7 @@ export default function Modal({open, children}){
         <div>
             <style jsx>{`
                 /* The Modal (background) */
-                .modal {
+                .rgmodal {
 
                     position: fixed; /* Stay in place */
                     z-index: 1; /* Sit on top */
@@ -20,7 +20,7 @@ export default function Modal({open, children}){
                 }
                 
                 /* Modal Content */
-                .modal-content {
+                .rgmodal-content {
                     background-color: #fefefe;
                     margin: auto;
                     margin-top: 10%;
@@ -31,8 +31,8 @@ export default function Modal({open, children}){
                 
             `}</style>
 
-            <div className="modal">
-                <div className="modal-content">
+            <div className="rgmodal">
+                <div className="rgmodal-content">
                     {children}
                 </div>
             </div>
