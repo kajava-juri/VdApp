@@ -4,6 +4,7 @@ import useUser from "../lib/useUser";
 import fetchJson from "../lib/fetchJson";
 
 
+
 export default function Profile({userInfo}){
     const { user } = useUser({
         redirectTo: "/login",

@@ -4,24 +4,26 @@ import useUser from "../lib/useUser";
 import React from 'react';
 import ReactPlayer from 'react-player';
 import VideoModal from "../Components/VideoModal";
+import Router from 'next/router'
+import fetchJson from "../lib/fetchJson";
+import Link from "next/link";
 const path = require('path');
 const {resolve} = require('path');
 
-
-export default function Home({files}) {
+export default function Home({files, page, maxAmount}) {
   const { user } = useUser({
     redirectTo: "",
   });
-
+  
   const [modalOpen, setModalOpen] = useState(false);
   const [vdSource, setVdSource] = useState("");
 
   function handleFullscreen(video){
     setVdSource(video);
     setModalOpen(true);
-    console.log(modalOpen);
 
   }
+
 
   return (
     <Layout>
@@ -31,7 +33,6 @@ export default function Home({files}) {
 
         </div>
       )}
-
       {files && (
         <div>
           <div className="container">
@@ -49,8 +50,7 @@ export default function Home({files}) {
                 else{
                   return (
                     <div className="col-md-3" style={{margin: "10px", padding: "15px", minHeight: '410px', border: "1px solid rgba(0,0,0,.125)", borderRadius: "0.25rem", width:"290px"}}>
-                      <video height="210" width="100%" className="myVid" onClick={() => handleFullscreen(file)}>
-                        <source src={`videos/${file}`}></source>
+                      <video src={`videos/${file}`} height="210" width="100%" className="myVid" onClick={() => handleFullscreen(file)}>
                       </video>
                       <p>{file}</p>
                     </div>
@@ -59,6 +59,26 @@ export default function Home({files}) {
               })}
             </div>
           </div>
+          <div style={{marginBottom: "20px"}}>
+            <Link href="/?page=1">
+              <a>First page</a>
+            </Link>
+
+            <button
+            onClick={() => Router.push(`/?page=${page - 1}`)}
+            disabled={page <= 1}
+            > 
+            PREV 
+            </button>
+
+            <span style={{fontSize: "20px"}}> {page} </span>
+
+            <button onClick={() => Router.push(`/?page=${page + 1}`)}
+            disabled={files.length !== maxAmount}>
+            NEXT
+            </button>
+          </div>
+          
 
           <VideoModal open={modalOpen} onClose={() => {setModalOpen(false)}} source={vdSource}>
 
@@ -70,12 +90,13 @@ export default function Home({files}) {
   )
 }
 
-export async function getStaticProps() {
-  const fs = require("fs");
+Home.getInitialProps = async({query: {page = 1}}) => {
+  const d = await fetch(`http://localhost:3000/api/getFiles?page=${page}`)
+  const f = await d.json();
 
-
-  const files = fs.readdirSync("public/videos/");
   return {
-    props: {files}, // will be passed to the page component as props
+    files: f.files,
+    maxAmount: f.maxAmount,
+    page: parseInt(page, 10)
   }
 }

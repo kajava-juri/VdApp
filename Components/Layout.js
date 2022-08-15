@@ -42,7 +42,7 @@ export default function Layout({ children }) {
             sans-serif;
           background-color: #282c34;
         }
-        h1, p {
+        h1, p, h2, span {
           color: #fff;
         }
 
