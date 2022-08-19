@@ -7,8 +7,10 @@ import VideoModal from "../Components/VideoModal";
 import Router from 'next/router'
 import fetchJson from "../lib/fetchJson";
 import Link from "next/link";
+import VideoUploadForm from "../Components/VideoUpload";
 const path = require('path');
 const {resolve} = require('path');
+const axios = require('axios').default;
 
 export default function Home({files, page, maxAmount}) {
   const { user } = useUser({
@@ -24,13 +26,27 @@ export default function Home({files, page, maxAmount}) {
 
   }
 
+  const onChange = async (formData) => {
+    const config = {
+      headers: { 'content-type': 'multipart/form-data' },
+      onUploadProgress: (event) => {
+        console.log(`Current progress:`, Math.round((event.loaded * 100) / event.total));
+      },
+    };
+
+    const response = await axios.post('/api/fileUploads', formData, config);
+
+    console.log('response', response.data);
+  };
 
   return (
     <Layout>
       
       {user?.isLoggedIn && (
         <div>
-
+          <VideoUploadForm
+          onChange={onChange}
+          />
         </div>
       )}
       {files && (
@@ -90,9 +106,9 @@ export default function Home({files, page, maxAmount}) {
   )
 }
 
-Home.getInitialProps = async({query: {page = 1}}) => {
-  const d = await fetch(`http://localhost:3000/api/getFiles?page=${page}`)
-  const f = await d.json();
+Home.getInitialProps = async ({query: {page = 1}}) => {
+  const res = await fetch(`http://localhost:3000/api/getFiles?page=${page}`)
+  const f = await res.json();
 
   return {
     files: f.files,
