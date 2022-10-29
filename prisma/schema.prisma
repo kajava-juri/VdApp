@@ -12,3 +12,13 @@ model Users {
   Username String @unique
   Password String
 }
+
+model Videos {
+  Id   Int    @id @default(autoincrement())
+  Path String
+}
+
+model validation {
+  id       Int    @id @default(autoincrement())
+  password String
+}

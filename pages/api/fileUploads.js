@@ -1,5 +1,6 @@
 import nextConnect from 'next-connect'
 import multer from 'multer';
+import prisma from '../../lib/prisma';
 
 const upload = multer({
   storage: multer.diskStorage({
@@ -19,11 +20,23 @@ const apiRoute = nextConnect({
 
 apiRoute.use(upload.array('filesToUpload'));
 
+apiRoute.use(async (req, res) => {
+  let files = [];
+  req.files.map(file => {
+    files.push({Path: file.originalname})
+  })
+
+  await prisma.Videos.createMany({
+    data: files
+  })
+})
+
+export default apiRoute;
+
 apiRoute.post((req, res) => {
   res.status(200).json({ data: 'success' });
 });
 
-export default apiRoute;
 
 export const config = {
   api: {

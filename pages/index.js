@@ -26,6 +26,7 @@ export default function Home({files, page, maxAmount}) {
 
   }
 
+
   const onChange = async (formData) => {
     const config = {
       headers: { 'content-type': 'multipart/form-data' },
@@ -33,10 +34,9 @@ export default function Home({files, page, maxAmount}) {
         console.log(`Current progress:`, Math.round((event.loaded * 100) / event.total));
       },
     };
-
+    console.log("before api call");
     const response = await axios.post('/api/fileUploads', formData, config);
-
-    console.log('response', response.data);
+    // console.log(response);
   };
 
   return (
@@ -54,11 +54,11 @@ export default function Home({files, page, maxAmount}) {
           <div className="container">
             <div className="row" style={{justifyContent: "center"}}>
               {files.map((file) => {
-                if(path.extname(file) == ".gif"){
+                if(path.extname(file.Path) == ".gif"){
                   return (
                     <div className="col-md-3" style={{margin: "10px", padding: "15px", minHeight: "410px", border: "1px solid rgba(0,0,0,.125)", borderRadius: "0.25rem", width:"290px"}}>
-                      <img height="210" width="100%" className="myVid" src={`videos/${file}`}></img>
-                      <p>{file}</p>
+                      <img height="210" width="100%" className="myVid" src={`videos/${file.Path}`}></img>
+                      <p>{file.Path}</p>
                     </div>
                     
                   )
@@ -66,9 +66,9 @@ export default function Home({files, page, maxAmount}) {
                 else{
                   return (
                     <div className="col-md-3" style={{margin: "10px", padding: "15px", minHeight: '410px', border: "1px solid rgba(0,0,0,.125)", borderRadius: "0.25rem", width:"290px"}}>
-                      <video src={`videos/${file}`} height="210" width="100%" className="myVid" onClick={() => handleFullscreen(file)}>
+                      <video src={`videos/${file.Path}`} height="210" width="100%" className="myVid" onClick={() => handleFullscreen(file.Path)}>
                       </video>
-                      <p>{file}</p>
+                      <p>{file.Path}</p>
                     </div>
                   )
                 }
