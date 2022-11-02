@@ -7,6 +7,18 @@ const upload = multer({
     destination: './public/videos',
     filename: (req, file, cb) => cb(null, file.originalname),
   }),
+  fileFilter: (req, file, cb) => {
+    let foundFile = prisma.videos.findFirst({
+      where: {
+        Path: file.filename,
+      }
+    });
+    if(file.filename == foundFile){
+      cb(null, false);
+    } else {
+      cb(null, true);
+    }
+  }
 });
 
 const apiRoute = nextConnect({

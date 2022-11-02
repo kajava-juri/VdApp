@@ -15,7 +15,7 @@ model Users {
 
 model Videos {
   Id   Int    @id @default(autoincrement())
-  Path String
+  Path String @unique
 }
 
 model validation {
