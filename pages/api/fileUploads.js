@@ -2,20 +2,26 @@ import nextConnect from 'next-connect'
 import multer from 'multer';
 import prisma from '../../lib/prisma';
 
+let filePaths = [];
+
 const upload = multer({
   storage: multer.diskStorage({
     destination: './public/videos',
     filename: (req, file, cb) => cb(null, file.originalname),
   }),
-  fileFilter: (req, file, cb) => {
-    let foundFile = prisma.videos.findFirst({
+  //for every file checks database for existing name
+  //TODO notify user on name match
+  fileFilter: async (req, file, cb) => {
+    let foundFile = await prisma.videos.findUnique({
       where: {
-        Path: file.filename,
+        Path: file.originalname,
       }
     });
-    if(file.filename == foundFile){
+    if(file.originalname === (foundFile ? foundFile.Path : "")){
       cb(null, false);
+      //filePaths.push("boo");
     } else {
+      filePaths.push({Path: file.originalname});
       cb(null, true);
     }
   }
@@ -33,25 +39,21 @@ const apiRoute = nextConnect({
 apiRoute.use(upload.array('filesToUpload'));
 
 apiRoute.use(async (req, res) => {
-  let files = [];
-  req.files.map(file => {
-    files.push({Path: file.originalname})
+  const response = await prisma.Videos.createMany({
+    data: filePaths
   })
-
-  await prisma.Videos.createMany({
-    data: files
-  })
+  //res.send(filePaths);
+  filePaths = [];
 })
 
-export default apiRoute;
-
 apiRoute.post((req, res) => {
-  res.status(200).json({ data: 'success' });
+  return res.status(200).json({ data: 'success', paths: [...filePaths] });
 });
 
+export default apiRoute;
 
 export const config = {
   api: {
     bodyParser: false, // Disallow body parsing, consume as stream
-  },
+  }
 };

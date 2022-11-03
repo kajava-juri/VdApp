@@ -29,19 +29,6 @@ export default function Home({files, page, maxAmount}) {
 
   }
 
-  const onChange = async (formData) => {
-    const config = {
-      headers: { 'content-type': 'multipart/form-data' },
-      onUploadProgress: (event) => {
-        console.log(`Current progress:`, Math.round((event.loaded * 100) / event.total));
-      },
-    };
-
-    axios.post('/api/fileUploads', formData, config).then(() => router.reload());
-
-    // console.log(response);
-  };
-
   async function handleDeleteClick(filename){
     const response = await axios.post('/api/fileDelete', {filename: filename});
     router.reload();
@@ -54,9 +41,7 @@ export default function Home({files, page, maxAmount}) {
       
       {user?.isLoggedIn && (
         <div>
-          <VideoUploadForm
-          onChange={onChange}
-          />
+          <VideoUploadForm router={router}/>
         </div>
       )}
       {files && (

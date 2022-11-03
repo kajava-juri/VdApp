@@ -1,5 +1,7 @@
-export default function VideoUploadForm({onChange}){
-    const onChangeHandler = (event) => {
+const axios = require('axios').default;
+
+export default function VideoUploadForm({router}){
+    const onChangeHandler = async (event) => {
         if (!event.currentTarget.files?.length) {
           return;
         }
@@ -10,7 +12,13 @@ export default function VideoUploadForm({onChange}){
           formData.append(event.target.name, file);
         });
     
-        onChange(formData);
+        const config = {
+          headers: { 'content-type': 'multipart/form-data' }
+        };
+    
+        const response = await axios.post('/api/fileUploads', formData, config);
+        console.log(response);
+        //router.reload()
     
       }
 
