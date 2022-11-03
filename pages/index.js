@@ -20,6 +20,8 @@ export default function Home({files, page, maxAmount}) {
   
   const [modalOpen, setModalOpen] = useState(false);
   const [vdSource, setVdSource] = useState("");
+  const [showDelete, setShowDelete] = useState(true);
+  const [selectedFiles, setSelectedFiles] = useState([]);
 
   const router = useRouter();
 
@@ -32,9 +34,25 @@ export default function Home({files, page, maxAmount}) {
   async function handleDeleteClick(filename){
     const response = await axios.post('/api/fileDelete', {filename: filename});
     router.reload();
-    console.log(response);
   }
-  console.log(files.length);
+
+  function handleChecked(e){
+    if(e.target.checked){
+      setSelectedFiles([...selectedFiles, {id: e.target.id, filename: e.target.dataset.filename}]);
+    } else {
+      setSelectedFiles(selectedFiles.filter(f => f.id !== e.target.id));
+    }
+
+  }
+
+  useEffect(() => {
+    if(selectedFiles.length === 0){
+      setShowDelete(true);
+    } else {
+      setShowDelete(false);
+    }
+  }, [selectedFiles])
+
 
   return (
     <Layout>
@@ -52,8 +70,13 @@ export default function Home({files, page, maxAmount}) {
                 if(path.extname(file.Path) == ".gif"){
                   return (
                     <div key={file.Id} className="col-md-3" style={{margin: "10px", padding: "15px", minHeight: "410px", border: "1px solid rgba(0,0,0,.125)", borderRadius: "0.25rem", width:"290px"}}>
+                      <input type="checkbox" className="regular-checkbox big-checkbox" onClick={handleChecked} id={file.Path}/>
+
                       <img height="210" width="100%" className="myVid" src={`videos/${file.Path}`}></img>
                       <p>{file.Path}</p>
+                      {(user?.isLoggedIn & showDelete) && (
+                        <button onClick={() => handleDeleteClick(file.Path)}>DELETE</button>
+                      )}
                     </div>
                     
                   )
@@ -61,10 +84,14 @@ export default function Home({files, page, maxAmount}) {
                 else{
                   return (
                     <div key={file.Id} className="col-md-3" style={{margin: "10px", padding: "15px", minHeight: '410px', border: "1px solid rgba(0,0,0,.125)", borderRadius: "0.25rem", width:"290px"}}>
+                      <input type={"checkbox"} className="regular-checkbox big-checkbox" onClick={handleChecked} id={file.Id} data-filename={file.Path}/>
+
                       <video src={`videos/${file.Path}`} height="210" width="100%" className="myVid" onClick={() => handleFullscreen(file.Path)}>
                       </video>
                       <p>{file.Path}</p>
-                      <button onClick={() => handleDeleteClick(file.Path)}>DELETE</button>
+                      {(user?.isLoggedIn & showDelete) && (
+                        <button onClick={() => handleDeleteClick(file.Path)}>DELETE</button>
+                      )}
 
                     </div>
                   )
@@ -86,10 +113,12 @@ export default function Home({files, page, maxAmount}) {
 
             <span style={{fontSize: "20px"}}> {page} </span>
 
+            
             <button onClick={() => Router.push(`/?page=${page + 1}`)}
             disabled={files.length < maxAmount}>
             NEXT
             </button>
+
           </div>
           
 
