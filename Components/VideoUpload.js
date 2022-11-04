@@ -18,7 +18,7 @@ export default function VideoUploadForm({router}){
     
         const response = await axios.post('/api/fileUploads', formData, config);
         console.log(response);
-        //router.reload()
+        router.reload()
     
       }
 

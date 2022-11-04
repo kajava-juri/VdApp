@@ -42,8 +42,8 @@ apiRoute.use(async (req, res) => {
   const response = await prisma.Videos.createMany({
     data: filePaths
   })
-  //res.send(filePaths);
   filePaths = [];
+  res.send(response);
 })
 
 apiRoute.post((req, res) => {

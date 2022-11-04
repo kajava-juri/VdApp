@@ -32,17 +32,23 @@ export default function Home({files, page, maxAmount}) {
   }
 
   async function handleDeleteClick(filename){
-    const response = await axios.post('/api/fileDelete', {filename: filename});
+    const response = await axios.post('/api/fileDelete', {filename: filename, isMany: false});
     router.reload();
   }
 
   function handleChecked(e){
     if(e.target.checked){
-      setSelectedFiles([...selectedFiles, {id: e.target.id, filename: e.target.dataset.filename}]);
+      setSelectedFiles([...selectedFiles, e.target.dataset.filename]);
     } else {
-      setSelectedFiles(selectedFiles.filter(f => f.id !== e.target.id));
+      setSelectedFiles(selectedFiles.filter(f => f !== e.target.dataset.filename));
     }
 
+  }
+
+  async function handleDeleteSelected(){
+    const response = await axios.post('/api/fileDelete', {filenames: selectedFiles, isMany: true});
+    console.log(response);
+    router.reload();
   }
 
   useEffect(() => {
@@ -53,13 +59,21 @@ export default function Home({files, page, maxAmount}) {
     }
   }, [selectedFiles])
 
+  function t(){
+    console.log(selectedFiles);
+  }
 
   return (
     <Layout>
-      
+      <button onClick={t}>Show selected</button>
       {user?.isLoggedIn && (
-        <div>
+        <div style={{display: "flex", flexDirection: "row", width: "50%", justifyContent: "space-between"}}>
           <VideoUploadForm router={router}/>
+          {!showDelete && (
+            <div>
+              <button onClick={handleDeleteSelected}>Delete selected</button>
+            </div>
+          )}
         </div>
       )}
       {files && (
@@ -70,11 +84,14 @@ export default function Home({files, page, maxAmount}) {
                 if(path.extname(file.Path) == ".gif"){
                   return (
                     <div key={file.Id} className="col-md-3" style={{margin: "10px", padding: "15px", minHeight: "410px", border: "1px solid rgba(0,0,0,.125)", borderRadius: "0.25rem", width:"290px"}}>
-                      <input type="checkbox" className="regular-checkbox big-checkbox" onClick={handleChecked} id={file.Path}/>
+                      {user?.isLoggedIn && (
+                        <input type="checkbox" className="regular-checkbox big-checkbox" data-filename={file.Path} onClick={handleChecked} id={file.Id}/>
+                      )}
+
 
                       <img height="210" width="100%" className="myVid" src={`videos/${file.Path}`}></img>
                       <p>{file.Path}</p>
-                      {(user?.isLoggedIn & showDelete) && (
+                      {(showDelete && user?.isLoggedIn) && (
                         <button onClick={() => handleDeleteClick(file.Path)}>DELETE</button>
                       )}
                     </div>
@@ -84,12 +101,14 @@ export default function Home({files, page, maxAmount}) {
                 else{
                   return (
                     <div key={file.Id} className="col-md-3" style={{margin: "10px", padding: "15px", minHeight: '410px', border: "1px solid rgba(0,0,0,.125)", borderRadius: "0.25rem", width:"290px"}}>
-                      <input type={"checkbox"} className="regular-checkbox big-checkbox" onClick={handleChecked} id={file.Id} data-filename={file.Path}/>
+                      {user?.isLoggedIn && (
+                        <input type="checkbox" className="regular-checkbox big-checkbox" data-filename={file.Path} onClick={handleChecked} id={file.Id}/>
+                      )}
 
                       <video src={`videos/${file.Path}`} height="210" width="100%" className="myVid" onClick={() => handleFullscreen(file.Path)}>
                       </video>
                       <p>{file.Path}</p>
-                      {(user?.isLoggedIn & showDelete) && (
+                      {(showDelete && user?.isLoggedIn) && (
                         <button onClick={() => handleDeleteClick(file.Path)}>DELETE</button>
                       )}
 
@@ -105,7 +124,7 @@ export default function Home({files, page, maxAmount}) {
             </Link>
 
             <button
-            onClick={() => Router.push(`/?page=${page - 1}`)}
+            onClick={() => {setSelectedFiles([]); Router.push(`/?page=${page - 1}`);}}
             disabled={page <= 1}
             > 
             PREV 
@@ -114,7 +133,7 @@ export default function Home({files, page, maxAmount}) {
             <span style={{fontSize: "20px"}}> {page} </span>
 
             
-            <button onClick={() => Router.push(`/?page=${page + 1}`)}
+            <button onClick={() => {setSelectedFiles([]); Router.push(`/?page=${page + 1}`);}}
             disabled={files.length < maxAmount}>
             NEXT
             </button>
