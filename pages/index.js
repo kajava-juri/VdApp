@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
-import Layout from "../Components/Layout"
+import Layout from "../Components/Layout";
 import useUser from "../lib/useUser";
-import React from 'react';
+import React, {useMemo, useEffect, useState} from 'react';
 import ReactPlayer from 'react-player';
 import VideoModal from "../Components/VideoModal";
 import Router from 'next/router'
@@ -11,19 +10,51 @@ import VideoUploadForm from "../Components/VideoUpload";
 const path = require('path');
 const {resolve} = require('path');
 const axios = require('axios').default;
+import { debounce } from "lodash";
 import { useRouter } from 'next/router'
+import Media from "../Components/Media";
 
 export default function Home({files, page, maxAmount}) {
   const { user } = useUser({
     redirectTo: "",
   });
-  
   const [modalOpen, setModalOpen] = useState(false);
   const [vdSource, setVdSource] = useState("");
   const [showDelete, setShowDelete] = useState(true);
   const [selectedFiles, setSelectedFiles] = useState([]);
-
+  const [search, setSearch] = useState("");
   const router = useRouter();
+
+  useEffect(() => {
+    if(selectedFiles.length === 0){
+      setShowDelete(true);
+    } else {
+      setShowDelete(false);
+    }
+  }, [selectedFiles]);
+
+  const debouncedSearch = useMemo(() => {
+    const searchChange = (e) => {
+      if (e.target.value.length === 0) return;
+      setSearch(e.target.value);
+    }
+    return debounce(searchChange, 300);
+  }, []);
+
+  useEffect(() => {
+    if(!search) return;
+    const fetchSearch = async () => {
+      const response = await axios.post('/api/fileSearch', {search: search}, {
+        headers: {
+          "Content-Type": "application/json",
+        }
+      })
+      .then(response => console.log(response));
+    }
+
+    fetchSearch();
+  }, [search])
+
 
   function handleFullscreen(video){
     setVdSource(video);
@@ -51,29 +82,19 @@ export default function Home({files, page, maxAmount}) {
     router.reload();
   }
 
-  useEffect(() => {
-    if(selectedFiles.length === 0){
-      setShowDelete(true);
-    } else {
-      setShowDelete(false);
-    }
-  }, [selectedFiles])
-
-  function t(){
-    console.log(selectedFiles);
-  }
-
   return (
     <Layout>
-      <button onClick={t}>Show selected</button>
       {user?.isLoggedIn && (
-        <div style={{display: "flex", flexDirection: "row", width: "50%", justifyContent: "space-between"}}>
+        <div style={{display: "flex", flexDirection: "row", width: "100%", justifyContent: "space-between"}}>
           <VideoUploadForm router={router}/>
           {!showDelete && (
             <div>
               <button onClick={handleDeleteSelected}>Delete selected</button>
             </div>
           )}
+          <div>
+              <input type={"search"} placeholder="Search..." onChange={debouncedSearch}></input>
+          </div>
         </div>
       )}
       {files && (
@@ -81,40 +102,7 @@ export default function Home({files, page, maxAmount}) {
           <div className="container">
             <div className="row" style={{justifyContent: "center"}}>
               {files.map((file) => {
-                if(path.extname(file.Path) == ".gif"){
-                  return (
-                    <div key={file.Id} className="col-md-3" style={{margin: "10px", padding: "15px", minHeight: "410px", border: "1px solid rgba(0,0,0,.125)", borderRadius: "0.25rem", width:"290px"}}>
-                      {user?.isLoggedIn && (
-                        <input type="checkbox" className="regular-checkbox big-checkbox" data-filename={file.Path} onClick={handleChecked} id={file.Id}/>
-                      )}
-
-
-                      <img height="210" width="100%" className="myVid" src={`videos/${file.Path}`}></img>
-                      <p>{file.Path}</p>
-                      {(showDelete && user?.isLoggedIn) && (
-                        <button onClick={() => handleDeleteClick(file.Path)}>DELETE</button>
-                      )}
-                    </div>
-                    
-                  )
-                }
-                else{
-                  return (
-                    <div key={file.Id} className="col-md-3" style={{margin: "10px", padding: "15px", minHeight: '410px', border: "1px solid rgba(0,0,0,.125)", borderRadius: "0.25rem", width:"290px"}}>
-                      {user?.isLoggedIn && (
-                        <input type="checkbox" className="regular-checkbox big-checkbox" data-filename={file.Path} onClick={handleChecked} id={file.Id}/>
-                      )}
-
-                      <video src={`videos/${file.Path}`} height="210" width="100%" className="myVid" onClick={() => handleFullscreen(file.Path)}>
-                      </video>
-                      <p>{file.Path}</p>
-                      {(showDelete && user?.isLoggedIn) && (
-                        <button onClick={() => handleDeleteClick(file.Path)}>DELETE</button>
-                      )}
-
-                    </div>
-                  )
-                }
+                return <Media file={file} checkboxClick={handleChecked} showDelete={showDelete} isLoggedIn={user?.isLoggedIn} onMediaClick={handleFullscreen} Delete={handleDeleteClick}/>
               })}
             </div>
           </div>
@@ -152,12 +140,13 @@ export default function Home({files, page, maxAmount}) {
 }
 
 Home.getInitialProps = async ({query: {page = 1}}) => {
-  const res = await fetch(`http://localhost:3000/api/getFiles?page=${page}`);
-  const f = await res.json();
+  const res = await fetch(`http://localhost:3000/api/getFiles?page=${page}`).then(res => res.json());
+  console.log(res);
+
 
   return {
-    files: f.files,
-    maxAmount: f.maxAmount,
+    files: res.files,
+    maxAmount: res.maxAmount,
     page: parseInt(page, 10)
   }
 }

@@ -12,5 +12,9 @@ export default async function handler(req, res){
         take: toTake
     });
 
+    if(!files){
+        return res.status(500).send({error: "no matches found"});
+    }
+
     return res.json({files: files, maxAmount: maxAmount, total: files.length});
 }
