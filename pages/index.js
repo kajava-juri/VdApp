@@ -85,18 +85,19 @@ export default function Home({files, page, maxAmount}) {
   return (
     <Layout>
       {user?.isLoggedIn && (
-        <div style={{display: "flex", flexDirection: "row", width: "100%", justifyContent: "space-between"}}>
+        <div style={{display: "flex", flexDirection: "row", width: "100%", justifyContent: "space-between", marginBottom: 32}}>
           <VideoUploadForm router={router}/>
           {!showDelete && (
             <div>
               <button onClick={handleDeleteSelected}>Delete selected</button>
             </div>
           )}
-          <div>
-              <input type={"search"} placeholder="Search..." onChange={debouncedSearch}></input>
-          </div>
+
         </div>
       )}
+        <div>
+            <button><a href="/search">Search</a></button>
+        </div>
       {files && (
         <div>
           <div className="container">

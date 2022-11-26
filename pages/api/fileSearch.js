@@ -13,7 +13,7 @@ export default async function handler(req, res){
                 contains: req.body.search
             }
         },
-        take: 10
+        take: maxAmount
     });
 
     if(!files){
