@@ -24,6 +24,7 @@ export default function Search() {
   const [showDelete, setShowDelete] = useState(true);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [search, setSearch] = useState("");
+  const [orderBy, setOrderBy ] = useState("desc");
   const router = useRouter();
 
   useEffect(() => {
@@ -43,7 +44,7 @@ export default function Search() {
   }, []);
 
   const fetchSearch = async () => {
-    const response = await axios.post('/api/fileSearch', {search: search}, {
+    const response = await axios.post('/api/fileSearch', {search: search, orderBy: orderBy}, {
       headers: {
         "Content-Type": "application/json",
       }
@@ -58,7 +59,7 @@ export default function Search() {
     if(!search) return;
 
     fetchSearch();
-  }, [search])
+  }, [search, orderBy])
 
 
   function handleFullscreen(video){
@@ -87,6 +88,12 @@ export default function Search() {
     router.reload();
   }
 
+  function toggleSortBy(){
+    let s = orderBy == "desc" ? "asc" : "desc";
+    setOrderBy(s);
+    //fetchSearch();
+  }
+
   return (
     <Layout>
       {user?.isLoggedIn && (
@@ -102,6 +109,7 @@ export default function Search() {
       )}
         <div>
             <input type={"search"} placeholder="Search..." onChange={debouncedSearch}></input>
+            <button className="mx-3" onClick={toggleSortBy}>{orderBy === "desc" ? <>&darr; A → Z</> : <>&uarr; Z → A</>}</button>
         </div>
       {files && (
         <div>

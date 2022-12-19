@@ -27,8 +27,7 @@ export default function Media({file, checkboxClick, showDelete, isLoggedIn, onMe
             )}
 
             <div onClick={() => onMediaClick(file.Path)} className="myVid">
-              <video src={`videos/${file.Path}`} height="210" width="100%"  >
-              </video>
+              <video src={`videos/${file.Path}`} height="210" width="100%"></video>
               <p>{file.Path}</p>
             </div>
 
