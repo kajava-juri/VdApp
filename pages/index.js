@@ -109,7 +109,7 @@ export default function Home({files, page, maxAmount}) {
           </div>
           <div style={{marginBottom: "20px"}}>
             <Link href="/?page=1">
-              <a>First page</a>
+              First page
             </Link>
 
             <button
@@ -137,7 +137,7 @@ export default function Home({files, page, maxAmount}) {
       )}
 
     </Layout>
-  )
+  );
 }
 
 Home.getInitialProps = async ({query: {page = 1}}) => {

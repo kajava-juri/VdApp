@@ -14,14 +14,14 @@ export default function Header() {
       <nav>
         <ul>
           <li key={"home"}>
-            <Link href="/">
+            <Link href="/" legacyBehavior>
               <a>Home</a>
             </Link>
           </li>
           {user?.isLoggedIn && (
             <>
               <li key={"profile"}>
-                <Link href="/profile">
+                <Link href="/profile" legacyBehavior>
                   <a>
                     <span
                       style={{
