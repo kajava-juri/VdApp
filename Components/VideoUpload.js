@@ -18,7 +18,7 @@ export default function VideoUploadForm({router}){
     
         const response = await axios.post('/api/fileUploads', formData, config);
         console.log(response);
-        router.reload()
+        //router.reload()
     
       }
 
@@ -27,6 +27,7 @@ export default function VideoUploadForm({router}){
             <input
             onChange={onChangeHandler}
             type="file"
+            accept='video/*, image/gif'
             name="filesToUpload"
             multiple={true}
             />

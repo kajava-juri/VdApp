@@ -22,7 +22,6 @@ export default function Home({files, page, maxAmount}) {
   const [vdSource, setVdSource] = useState("");
   const [showDelete, setShowDelete] = useState(true);
   const [selectedFiles, setSelectedFiles] = useState([]);
-  const [search, setSearch] = useState("");
   const router = useRouter();
 
   useEffect(() => {
@@ -32,29 +31,6 @@ export default function Home({files, page, maxAmount}) {
       setShowDelete(false);
     }
   }, [selectedFiles]);
-
-  const debouncedSearch = useMemo(() => {
-    const searchChange = (e) => {
-      if (e.target.value.length === 0) return;
-      setSearch(e.target.value);
-    }
-    return debounce(searchChange, 300);
-  }, []);
-
-  useEffect(() => {
-    if(!search) return;
-    const fetchSearch = async () => {
-      const response = await axios.post('/api/fileSearch', {search: search}, {
-        headers: {
-          "Content-Type": "application/json",
-        }
-      })
-      .then(response => console.log(response));
-    }
-
-    fetchSearch();
-  }, [search])
-
 
   function handleFullscreen(video){
     setVdSource(video);
@@ -142,7 +118,7 @@ export default function Home({files, page, maxAmount}) {
 
 Home.getInitialProps = async ({query: {page = 1}}) => {
   const res = await fetch(`http://localhost:3000/api/getFiles?page=${page}`).then(res => res.json());
-  console.log(res);
+  //console.log(res);
 
 
   return {

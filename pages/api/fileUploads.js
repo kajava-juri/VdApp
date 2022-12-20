@@ -36,14 +36,19 @@ const apiRoute = nextConnect({
   },
 });
 
+apiRoute.use(async (req, res) => {
+  return res.send({user: req.session});
+})
+
 apiRoute.use(upload.array('filesToUpload'));
 
-apiRoute.use(async (req, res) => {
-  const response = await prisma.Videos.createMany({
-    data: filePaths
-  })
-  filePaths = [];
-  res.send(response);
+apiRoute.post(async (req, res) => {
+  return res.send({user: req.session})
+  // const response = await prisma.Videos.createMany({
+  //   data: filePaths
+  // })
+  // filePaths = [];
+  // res.send(response);
 })
 
 apiRoute.post((req, res) => {

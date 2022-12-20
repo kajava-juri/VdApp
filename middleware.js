@@ -18,9 +18,9 @@ export async function middleware(req) {
         }
     }
 
-    if (req.nextUrl.pathname.startsWith('/api/fileSearch')) {
+    if (req.nextUrl.pathname.startsWith('/api/fileDelete')) {
         if(user?.isLoggedIn){
-            console.log("searching files while authorized");
+            console.log("uploading files while authorized");
         } else {
             return new NextResponse(
                 JSON.stringify({ success: false, message: 'authentication failed' }),

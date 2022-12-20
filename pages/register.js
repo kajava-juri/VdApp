@@ -45,7 +45,6 @@ export default function Register(){
     
   }
 
-  console.log(isAuthorised);
   return(
         <Layout>
             {isAuthorised && (
