@@ -32,7 +32,11 @@ export default function Media({file, checkboxClick, showDelete, isLoggedIn, onMe
             </div>
 
             {(showDelete && isLoggedIn) && (
-              <button onClick={() => Delete(file.Path)}>DELETE</button>
+              <div style={{display: "flex", justifyContent: "space-between"}}>
+                <button onClick={() => Delete(file.Path)}>DELETE</button>
+                <button>Save to playlist</button>
+              </div>
+
             )}
 
           </div>

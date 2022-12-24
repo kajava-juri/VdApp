@@ -8,17 +8,35 @@ datasource db {
 }
 
 model Users {
-  Id       Int    @id @default(autoincrement())
-  Username String @unique
-  Password String
+  Id        Int         @id @default(autoincrement())
+  Username  String      @unique
+  Password  String
+  Playlists Playlists[]
 }
 
 model Videos {
-  Id   Int    @id @default(autoincrement())
-  Path String @unique
+  Id              Int               @id @default(autoincrement())
+  Path            String            @unique
+  PlaylistsVideos PlaylistsVideos[]
 }
 
 model validation {
   id       Int    @id @default(autoincrement())
   password String
+}
+
+model Playlists {
+  Id              Int               @id @default(autoincrement())
+  UserId          Int?
+  Name            String?
+  Users           Users?            @relation(fields: [UserId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "User")
+  PlaylistsVideos PlaylistsVideos[]
+}
+
+model PlaylistsVideos {
+  Id         Int        @id @default(autoincrement())
+  PlaylistId Int?
+  VideoId    Int?
+  Playlists  Playlists? @relation(fields: [PlaylistId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "Playilist")
+  Videos     Videos?    @relation(fields: [VideoId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "Video")
 }

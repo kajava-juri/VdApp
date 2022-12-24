@@ -18,6 +18,15 @@ export async function middleware(req) {
         }
     }
 
+    if (req.nextUrl.pathname.startsWith('/api/playlistCreate')) {
+        if(!user?.isLoggedIn){
+            return new NextResponse(
+                JSON.stringify({ success: false, message: 'authentication failed' }),
+                { status: 401, headers: { 'content-type': 'application/json' } }
+              )
+        }
+    }
+
     if (req.nextUrl.pathname.startsWith('/api/fileDelete')) {
         if(user?.isLoggedIn){
             console.log("uploading files while authorized");
