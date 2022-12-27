@@ -10,13 +10,15 @@ const apiRoute = nextConnect({
     },
 });
 
-apiRoute.post(async (req, res) => {
-    const {userId, playlistName} = req.body;
-    const playlist = await prisma.Playlists.create({
-        data: {UserId: userId, Name: playlistName}
-    });
+apiRoute.get(async (req, res) => {
+    const {userId} = req.body;
+    const playlists = await prisma.Playlists.findMany({
+        where: {
+            UserId: userId
+        }
+    })
 
-    return res.status(200).json({user: userId, playlist: playlistName});
+    return res.status(200).send(playlists);
 })
 
 export default apiRoute;
