@@ -58,6 +58,29 @@ export default function Home({files, page, maxAmount}) {
     router.reload();
   }
 
+  const [playlists, setPlatylists] = useState([]);
+
+  async function fetchPlaylists(){
+    const response = await axios.get("/api/playlistGetAll", {userId: user.userId});
+    setPlatylists(response.data);
+    //console.log(response.data);
+  }
+
+  useEffect(()=>{
+    if(user?.isLoggedIn){
+      fetchPlaylists();
+    }
+  }, [user])
+
+  async function handlePlaylistChecked(e, videoId){
+    if(e.target.checked){
+      const response = await axios.post("/api/playlistAdd", {playlistId: e.target.value, videoId: videoId});
+    } else {
+      const response = await axios.delete("/api/playlistAdd", {playlistId: e.target.value, videoId: videoId});
+    }
+    console.log(response);
+  }
+
   return (
     <Layout>
       {user?.isLoggedIn && (
@@ -79,7 +102,7 @@ export default function Home({files, page, maxAmount}) {
           <div className="container">
             <div className="row" style={{justifyContent: "center"}}>
               {files.map((file) => {
-                return <Media file={file} checkboxClick={handleChecked} showDelete={showDelete} isLoggedIn={user?.isLoggedIn} onMediaClick={handleFullscreen} Delete={handleDeleteClick}/>
+                return <Media handlePlaylistChecked={handlePlaylistChecked} playlists={playlists} file={file} checkboxClick={handleChecked} showDelete={showDelete} isLoggedIn={user?.isLoggedIn} onMediaClick={handleFullscreen} Delete={handleDeleteClick}/>
               })}
             </div>
           </div>
