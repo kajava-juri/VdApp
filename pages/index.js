@@ -73,10 +73,11 @@ export default function Home({files, page, maxAmount}) {
   }, [user])
 
   async function handlePlaylistChecked(e, videoId){
+    let response
     if(e.target.checked){
-      const response = await axios.post("/api/playlistAdd", {playlistId: e.target.value, videoId: videoId});
+      response = await axios.post("/api/playlistAdd", {playlistId: e.target.value, videoId: videoId});
     } else {
-      const response = await axios.delete("/api/playlistAdd", {playlistId: e.target.value, videoId: videoId});
+      response = await axios.delete("/api/playlistAdd", {data: {playlistId: e.target.value, videoId: videoId}});
     }
     console.log(response);
   }

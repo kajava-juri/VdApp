@@ -37,6 +37,6 @@ model PlaylistsVideos {
   Id         Int        @id @default(autoincrement())
   PlaylistId Int?
   VideoId    Int?
-  Playlists  Playlists? @relation(fields: [PlaylistId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "Playilist")
-  Videos     Videos?    @relation(fields: [VideoId], references: [Id], onDelete: NoAction, onUpdate: NoAction, map: "Video")
+  Playlists  Playlists? @relation(fields: [PlaylistId], references: [Id], onDelete: Cascade, onUpdate: NoAction, map: "Playlist")
+  Videos     Videos?    @relation(fields: [VideoId], references: [Id], onDelete: Cascade, onUpdate: NoAction, map: "Video")
 }

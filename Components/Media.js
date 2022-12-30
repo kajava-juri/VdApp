@@ -1,10 +1,32 @@
 import axios from 'axios';
+import { forEach } from 'lodash';
+import { useEffect, useState } from 'react';
 
 const path = require('path');
 
 export default function Media({file, checkboxClick, showDelete, isLoggedIn, onMediaClick, Delete, playlists, handlePlaylistChecked}){
 
+  const [list, setList] = useState([]);
+
+  async function videoExists(playlistId){
+    const response = await axios.post("/api/videoExists", {videoId: file.Id, playlistId: playlistId});
+    return response.data.exists;
+  }
+
+  useEffect(() => {
+    async function fillPlaylists(){
+      let temp = [];
+      for (const playlist of playlists) {
+        const exists = await videoExists(playlist.Id);
+        temp.push({Id: playlist.Id, vd: file.Id, Name: playlist.Name, checked: exists});
+      }
+      setList(temp);
+      console.log(temp);
+    }
+
+    fillPlaylists();
   
+  }, [playlists])
 
   if(path.extname(file.Path) == ".gif"){
       return (
@@ -39,16 +61,16 @@ export default function Media({file, checkboxClick, showDelete, isLoggedIn, onMe
           {(showDelete && isLoggedIn) && (
             <div style={{display: "flex", justifyContent: "space-between"}}>
               <button onClick={() => Delete(file.Path)}>DELETE</button>
-              {playlists.length > 0 && (
-                <div class="dropdown">
-                  <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              {list.length > 0 && (
+                <div className="dropdown">
+                  <button className="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     Add to playlist
                   </button>
-                  <ul class="dropdown-menu">
-                    {playlists.map((playlist) => {
-                      return(
-                        <li>
-                          <input className="form-check-input" type="checkbox" value={playlist.Id} id="playlistCheck" onChange={e => handlePlaylistChecked(e, file.Id)}/>
+                  <ul className="dropdown-menu">
+                    {list.map((playlist) => {
+                      return (
+                        <li key={`v${file.Id}p${playlist.Id}`}>
+                          <input className="form-check-input" type="checkbox" checked={playlist.checked} value={playlist.Id} id="playlistCheck" onChange={e => handlePlaylistChecked(e, file.Id)}/>
                           <label className="form-check-label" htmlFor="playlistCheck">{playlist.Name}</label>
                         </li>
                       )

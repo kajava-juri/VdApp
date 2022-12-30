@@ -24,14 +24,14 @@ apiRoute.post(async (req, res) => {
 apiRoute.delete(async (req, res) => {
     const {videoId} = req.body;
     const playlistId = parseInt(req.body.playlistId);
-    const deletedPlaylist = await prisma.PlaylistsVideos.delete({
+    const deletedPlaylist = await prisma.PlaylistsVideos.deleteMany({
         where: {
-            videoId: videoId,
+            VideoId: videoId,
             PlaylistId: playlistId
         }
     })
 
-    return res.status(200).json(deletedPlaylist);
+    return res.status(200).json({pl: playlistId, vd: videoId});
 })
 
 export default apiRoute;
