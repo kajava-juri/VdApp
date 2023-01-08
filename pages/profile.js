@@ -3,12 +3,15 @@ import Layout from "../Components/Layout";
 import useUser from "../lib/useUser";
 const axios = require('axios').default;
 import { useState } from "react";
+import { useRouter } from "next/router";
 
 
 export default function Profile({userInfo}){
     const { user } = useUser({
         redirectTo: "/login",
       });
+
+      const router = useRouter();
 
       const [playlists, setPlatylists] = useState([]);
       const [playlistName, setPlaylistName] = useState("");
@@ -31,27 +34,28 @@ export default function Profile({userInfo}){
       async function handleCreatePlaylist(){
         const response = await axios.post('/api/playlistCreate', {playlistName: playlistName, userId: user.userId});
         console.log(response);
+        router.reload();
+      }
+
+      async function handleGotoPlaylist(playlistId){
+        router.push(`/playlist?playlistId=${playlistId}`);
       }
 
       return(
         <Layout>
             {user && (
-            <div>
-                <h1>Logged in</h1>
+            <div className="my-5">
+
                 <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Create new playlist</button>
 
                 <div>
                   {playlists && (
-                    <div>
+                    <div className="row" style={{marginTop: 32}}>
                       {playlists.map((playlist) => {
                         return(
-                          <div className="card" style={{width: "18rem"}}>
-                          <div className="card-body">
-                            <h5 className="card-title">{playlist.Name}</h5>
-                            <a href="#" className="card-link">Card link</a>
-                            <a href="#" className="card-link">Another link</a>
+                          <div className="col-2 d-flex justify-content-center align-items-center border rounded mx-3 my-3 playlist" style={{height: 128}} onClick={() => handleGotoPlaylist(playlist.Id)}>
+                            <p style={{fontSize:24}}>{playlist.Name}</p>
                           </div>
-                        </div>
                         )
                       })}
                     </div>
@@ -71,7 +75,7 @@ export default function Profile({userInfo}){
                       </div>
                       <div className="modal-footer">
                         <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" className="btn btn-primary" onClick={handleCreatePlaylist}>Create</button>
+                        <button type="button" className="btn btn-primary" data-bs-dismiss="modal" onClick={handleCreatePlaylist}>Create</button>
                       </div>
                     </div>
                   </div>
