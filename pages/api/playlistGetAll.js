@@ -1,3 +1,4 @@
+import { toInteger } from 'lodash';
 import prisma from '../../lib/prisma';
 import nextConnect from 'next-connect';
 
@@ -11,7 +12,10 @@ const apiRoute = nextConnect({
 });
 
 apiRoute.get(async (req, res) => {
-    const {userId} = req.body;
+    const userId = toInteger(req.query.userId);
+    if(!userId){
+      return res.status(404).send({error: 404, message: "pelase provide user id", moreInfo: userId});
+    }
     const playlists = await prisma.Playlists.findMany({
         where: {
             UserId: userId

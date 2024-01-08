@@ -20,13 +20,16 @@ export default function Profile({userInfo}){
       }
 
       async function fetchPlaylists(){
-        const response = await axios.get("/api/playlistGetAll", {userId: user.userId});
+        const response = await axios.get("/api/playlistGetAll", {params:
+          {userId: user.userId}
+        });
         setPlatylists(response.data);
         console.log(response.data);
       }
 
       useEffect(()=>{
         if(user?.isLoggedIn){
+          console.log(user);
           fetchPlaylists();
         }
       }, [user])
