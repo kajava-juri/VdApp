@@ -58,6 +58,9 @@ export default function Media({file, checkboxClick, showDelete, isLoggedIn, onMe
             <p>{file.Path}</p>
           </div>
 
+            //TODO fetch playlists when the dropdown is pressed
+
+
           {(showDelete && isLoggedIn) && (
             <div style={{display: "flex", justifyContent: "space-between"}}>
               <button onClick={() => Delete(file.Path)}>DELETE</button>
