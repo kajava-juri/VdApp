@@ -11,27 +11,11 @@ const apiRoute = nextConnect({
 });
 
 apiRoute.post(async (req, res) => {
-    const {playlistId, videoId} = req.body;
-    const playlistVideo = await prisma.PlaylistsVideos.findFirst({
-        where: {
-            AND:[
-              {
-                PlaylistId: {
-                  equals: playlistId
-                }
-              },
-              {
-                VideoId: {
-                  equals: videoId
-                }
-              }
-            ]
+    const {userId, videoId} = req.body;
+    const result = await prisma.$queryRaw`SELECT * FROM get_playlists_for_user_and_video(${userId}::int, ${videoId}::int)`;
 
-        }
-    })
-
-    const exists = playlistVideo == null ? false : true;
-    return res.status(200).send({exists: exists});
+    //const exists = playlistVideo == null ? false : true;
+    return res.status(200).send({result: result});
 })
 
 export default apiRoute;

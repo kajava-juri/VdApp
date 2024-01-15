@@ -105,7 +105,7 @@ export default function Home({ files, page, maxAmount }) {
           <div className="container">
             <div className="row" style={{ justifyContent: "center" }}>
               {files.map((file) => {
-                return <Media handlePlaylistChecked={handlePlaylistChecked} playlists={playlists} file={file} checkboxClick={handleChecked} showDelete={showDelete} isLoggedIn={user?.isLoggedIn} onMediaClick={handleFullscreen} Delete={handleDeleteClick} />
+                return <Media handlePlaylistChecked={handlePlaylistChecked} userId={user?.userId} playlists={playlists} file={file} checkboxClick={handleChecked} showDelete={showDelete} isLoggedIn={user?.isLoggedIn} onMediaClick={handleFullscreen} Delete={handleDeleteClick} />
               })}
             </div>
           </div>
