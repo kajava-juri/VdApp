@@ -10,7 +10,7 @@ export default function Header() {
 
   return (
     <header>
-      
+
       <nav>
         <ul>
           <li key={"home"}>
@@ -18,6 +18,15 @@ export default function Header() {
               <a>Home</a>
             </Link>
           </li>
+          {!user?.isLoggedIn && (
+            <>
+              <li key={"login"}>
+                <Link href="/login" legacyBehavior>
+                  <a>Login</a>
+                </Link>
+              </li>
+            </>
+          )}
           {user?.isLoggedIn && (
             <>
               <li key={"profile"}>

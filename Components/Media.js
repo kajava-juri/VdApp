@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 
 const path = require('path');
 
-export default function Media({ file, checkboxClick, showDelete, isLoggedIn, onMediaClick, Delete, playlists, handlePlaylistChecked, userId }) {
+export default function Media({ file, checkboxClick, showDelete, isLoggedIn, onMediaClick, Delete, playlists, handlePlaylistChecked, userId, children }) {
 
   const [list, setList] = useState([]);
 
@@ -73,7 +73,7 @@ export default function Media({ file, checkboxClick, showDelete, isLoggedIn, onM
           </div>
 
         )}
-
+        {children}
       </div>
     )
   }
