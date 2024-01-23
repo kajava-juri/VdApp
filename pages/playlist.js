@@ -92,16 +92,6 @@ export default function Profile({ page, files, maxAmount }) {
     console.log(response);
   }
 
-  async function handlePlaylistChecked(e, videoId) {
-    let response
-    if (e.target.checked) {
-      response = await axios.post("/api/playlistAdd", { playlistId: e.target.value, videoId: videoId });
-    } else {
-      response = await axios.delete("/api/playlistAdd", { data: { playlistId: e.target.value, videoId: videoId } });
-    }
-    console.log(response);
-  }
-
   return (
     <Layout>
       <h2>{playlistName}</h2>
@@ -113,7 +103,7 @@ export default function Profile({ page, files, maxAmount }) {
           <div className="container">
             <div className="row" style={{ justifyContent: "center" }}>
               {files.map((file) => {
-                return <Media handlePlaylistChecked={handlePlaylistChecked} userId={user?.userId} playlists={playlists} file={file} checkboxClick={handleChecked} showDelete={showDelete} isLoggedIn={user?.isLoggedIn} onMediaClick={handleFullscreen} Delete={handleDeleteClick}>
+                return <Media userId={user?.userId} playlists={playlists} file={file} checkboxClick={handleChecked} showDelete={showDelete} isLoggedIn={user?.isLoggedIn} onMediaClick={handleFullscreen} Delete={handleDeleteClick}>
                   <button onClick={() => removeFromPlaylist(file.Id)}>Remove from playlist</button>
                 </Media>
               })}

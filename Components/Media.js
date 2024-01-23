@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 
 const path = require('path');
 
-export default function Media({ file, checkboxClick, showDelete, isLoggedIn, onMediaClick, Delete, playlists, handlePlaylistChecked, userId, children }) {
+export default function Media({ file, checkboxClick, showDelete, isLoggedIn, onMediaClick, Delete, playlists, userId, children }) {
 
   const [list, setList] = useState([]);
 
@@ -21,6 +21,17 @@ export default function Media({ file, checkboxClick, showDelete, isLoggedIn, onM
       temp.push({ Id: playlist.Id, vd: file.Id, Name: playlist.Name, checked: exists });
     }
     setList(temp);
+    console.log(list);
+  }
+
+  async function handlePlaylistChecked(e) {
+    let response;
+    if (e.target.checked) {
+      response = await axios.post("/api/playlistAdd", { playlistId: e.target.value, videoId: file.Id });
+    } else {
+      response = await axios.delete("/api/playlistAdd", { data: { playlistId: e.target.value, videoId: file.Id } });
+    }
+
   }
 
   if (path.extname(file.Path) == ".gif") {
@@ -63,7 +74,7 @@ export default function Media({ file, checkboxClick, showDelete, isLoggedIn, onM
                 {list.map((playlist) => {
                   return (
                     <li key={`v${file.Id}p${playlist.Id}`}>
-                      <input className="form-check-input" type="checkbox" checked={playlist.checked} value={playlist.Id} id="playlistCheck" onChange={e => handlePlaylistChecked(e, file.Id)} />
+                      <input className="form-check-input" type="checkbox" defaultChecked={playlist.checked} value={playlist.Id} id="playlistCheck" onChange={handlePlaylistChecked} />
                       <label className="form-check-label" htmlFor="playlistCheck">{playlist.Name}</label>
                     </li>
                   )

@@ -66,7 +66,6 @@ export default function Home({ files, page, maxAmount }) {
       if (user?.isLoggedIn) {
         const playlistsData = await fetchPlaylists(user.userId);
         if (playlistsData) {
-          console.log(playlistsData);
           setPlatylists(playlistsData);
         }
       }
@@ -74,15 +73,7 @@ export default function Home({ files, page, maxAmount }) {
     fetchData();
   }, [user])
 
-  async function handlePlaylistChecked(e, videoId) {
-    let response
-    if (e.target.checked) {
-      response = await axios.post("/api/playlistAdd", { playlistId: e.target.value, videoId: videoId });
-    } else {
-      response = await axios.delete("/api/playlistAdd", { data: { playlistId: e.target.value, videoId: videoId } });
-    }
-    console.log(response);
-  }
+
 
   return (
     <Layout>
@@ -105,7 +96,7 @@ export default function Home({ files, page, maxAmount }) {
           <div className="container">
             <div className="row" style={{ justifyContent: "center" }}>
               {files.map((file) => {
-                return <Media handlePlaylistChecked={handlePlaylistChecked} userId={user?.userId} playlists={playlists} file={file} checkboxClick={handleChecked} showDelete={showDelete} isLoggedIn={user?.isLoggedIn} onMediaClick={handleFullscreen} Delete={handleDeleteClick} />
+                return <Media userId={user?.userId} playlists={playlists} file={file} checkboxClick={handleChecked} showDelete={showDelete} isLoggedIn={user?.isLoggedIn} onMediaClick={handleFullscreen} Delete={handleDeleteClick} />
               })}
             </div>
           </div>

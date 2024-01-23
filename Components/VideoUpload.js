@@ -7,6 +7,8 @@ export default function VideoUploadForm({router}){
         }
     
         const formData = new FormData();
+
+        
     
         Array.from(event.target.files).forEach((file) => {
           formData.append(event.target.name, file);
@@ -18,7 +20,7 @@ export default function VideoUploadForm({router}){
     
         const response = await axios.post('/api/fileUploads', formData, config);
         console.log(response);
-        //router.reload()
+        router.reload()
     
       }
 

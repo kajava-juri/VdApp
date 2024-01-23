@@ -12,16 +12,19 @@ const upload = multer({
   //for every file checks database for existing name
   //TODO notify user on name match
   fileFilter: async (req, file, cb) => {
+    file.originalname = Buffer.from(file.originalname, 'latin1').toString(
+      'utf8',
+    );
     let foundFile = await prisma.videos.findUnique({
       where: {
         Path: file.originalname,
       }
     });
-    if(file.originalname === (foundFile ? foundFile.Path : "")){
+    if (file.originalname === (foundFile ? foundFile.Path : "")) {
       cb(null, false);
       //filePaths.push("boo");
     } else {
-      filePaths.push({Path: file.originalname});
+      filePaths.push({ Path: file.originalname });
       cb(null, true);
     }
   }
@@ -51,6 +54,7 @@ apiRoute.post((req, res) => {
 });
 
 export default apiRoute;
+
 
 export const config = {
   api: {
