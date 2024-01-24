@@ -16,6 +16,8 @@ services:
       - ./uploads:/app/uploads
     depends_on:
       - postgres
+    expose:
+      - 3000
   postgres:
     image: postgres:14
     ports:
@@ -25,6 +27,5 @@ services:
       POSTGRES_USER: 'postgres'
       MYSQL_PASSWORD: 'ghost'
       POSTGRES_PASSWORD: 'ghost'
-
     expose:
       - 5432
