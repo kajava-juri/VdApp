@@ -1,0 +1,30 @@
+version: '1.2'
+
+services:
+  nextjs-application:
+    image: vd-app
+    # all that is needed to build prod live image
+    build:
+      context: .
+      dockerfile: Dockerfile
+      # DATABASE_URL needed for static site generation - getStaticProps
+      # NEXTAUTH_URL needed for CustomHead SEO
+    ports:
+      - '3000:3000'
+    #command: sleep infinity
+    volumes:
+      - ./uploads:/app/uploads
+    depends_on:
+      - postgres
+  postgres:
+    image: postgres:14
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_DB: 'vd_app'
+      POSTGRES_USER: 'postgres'
+      MYSQL_PASSWORD: 'ghost'
+      POSTGRES_PASSWORD: 'ghost'
+
+    expose:
+      - 5432
