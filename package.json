@@ -3,7 +3,7 @@
   "scripts": {
     "build": "next build",
     "dev": "next dev",
-    "start:migrate:prod": "node server.js",
+    "start:migrate:prod": "npx prisma migrate deploy && npx prisma db push && next start",
     "start": "next start"
   },
   "dependencies": {

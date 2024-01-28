@@ -27,4 +27,4 @@ COPY --from=build  /app/public /app/public
 COPY --from=build  /app/prisma /app/prisma
 
 EXPOSE 80
-CMD ["npm", "run" , "start"]
+CMD ["npm", "run", "start:migrate:prod"]
