@@ -41,7 +41,7 @@ export default function Media({ file, checkboxClick, showDelete, isLoggedIn, onM
           <input type="checkbox" className="regular-checkbox big-checkbox" data-filename={file.Path} onClick={checkboxClick} id={file.Id} />
         )}
         <div className="myVid">
-          <img height="210" width="100%" src={`videos/${file.Path}`}></img>
+          <img height="210" width="100%" src={`./videos/${file.Path}`}></img>
           <p>{file.Path}</p>
         </div>
 
